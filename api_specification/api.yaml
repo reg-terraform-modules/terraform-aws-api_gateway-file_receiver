@@ -1,0 +1,121 @@
+openapi: "3.0.1"
+info:
+  title: "${api_specification_name}"
+  description: "API for recieving images from IoT devices"
+  version: "2022-01-13T14:10:02Z"
+#servers:
+#- url: "https://w5opxc5j3e.execute-api.eu-west-1.amazonaws.com/{basePath}"
+#  variables:
+#    basePath:
+#      default: "/dev"
+paths:
+  /{bucket}/{folder}/{item}:
+    put:
+      parameters:
+      - name: "Content-Type"
+        in: "header"
+        schema:
+          type: "string"
+      - name: "Accept"
+        in: "header"
+        schema:
+          type: "string"
+      - name: "x-amz-meta-fileinfo"
+        in: "header"
+        schema:
+          type: "string"
+      - name: "item"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "bucket"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "folder"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        type: "aws"
+        credentials: "${iam_api_role_arn}"
+        httpMethod: "PUT"
+        uri: "arn:aws:apigateway:eu-west-1:s3:path/{bucket}/{folder}/{item}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "{\"message\":\"200: Upload successful\"}"
+        requestParameters:
+          integration.request.path.folder: "method.request.path.folder"
+          integration.request.header.Accept: "method.request.header.Accept"
+          integration.request.path.item: "method.request.path.item"
+          integration.request.header.x-amz-meta-fileinfo: "method.request.header.x-amz-meta-fileinfo"
+          integration.request.path.bucket: "method.request.path.bucket"
+          integration.request.header.Content-Type: "method.request.header.Content-Type"
+        passthroughBehavior: "when_no_match"
+        timeoutInMillis: 29000
+components:
+  schemas:
+    Empty:
+      title: "Empty Schema"
+      type: "object"
+  securitySchemes:
+    api_key:
+      type: "apiKey"
+      name: "x-api-key"
+      in: "header"
+#x-amazon-apigateway-policy:
+#  Version: "2012-10-17"
+#  Statement:
+#  - Effect: "Deny"
+#    Principal: "*"
+#    Action: "execute-api:Invoke"
+#    Resource: "execute-api:eu-west-1:462179287436:w5opxc5j3e/*/*/*"
+#    Condition:
+#      IpAddress:
+#        aws:SourceIp: "171.23.6.122/32"
+x-amazon-apigateway-binary-media-types:
+- "application/octet-stream"
+- "image/jpeg"
+- "image/gif"
+- "image/png"
+- "image/bmp"
+- "image/svg+xml"
+- "application/pdf"
+- "application/msword"
+- "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+- "application/vnd.openxmlformats-officedocument.wordprocessingml.template"
+- "application/vnd.ms-word.document.macroEnabled.12"
+- "application/vnd.ms-word.template.macroEnabled.12"
+- "application/vnd.ms-excel"
+- "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+- "application/vnd.openxmlformats-officedocument.spreadsheetml.template"
+- "application/vnd.ms-excel.sheet.macroEnabled.12"
+- "application/vnd.ms-excel.template.macroEnabled.12"
+- "application/vnd.ms-excel.addin.macroEnabled.12"
+- "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
+- "application/vnd.ms-powerpoint"
+- "application/zip"
+- "application/x-7z-compressed"
+- "text/plain"
+- "image/tiff"
+- "image/x-dcraw"
