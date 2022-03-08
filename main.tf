@@ -10,6 +10,7 @@ data "template_file" "api_setup" {
   vars = {
     api_specification_name          = var.api_name
     iam_api_role_arn                = var.iam_api_role_arn
+    api_description                 = var.api_description
   }
 }
 

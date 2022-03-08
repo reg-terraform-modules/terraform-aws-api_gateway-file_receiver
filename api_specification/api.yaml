@@ -1,7 +1,7 @@
 openapi: "3.0.1"
 info:
   title: "${api_specification_name}"
-  description: "API for recieving images from IoT devices"
+  description: "${api_description}"
   version: "2022-01-13T14:10:02Z"
 #servers:
 #- url: "https://w5opxc5j3e.execute-api.eu-west-1.amazonaws.com/{basePath}"

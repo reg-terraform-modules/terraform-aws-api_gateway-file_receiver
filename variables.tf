@@ -21,6 +21,10 @@ variable "iam_api_role_arn" {
   type    = string
 }
 
+variable "api_description" {
+  type    = string
+  default = "Standard API for file receiver"
+}
 
 
 

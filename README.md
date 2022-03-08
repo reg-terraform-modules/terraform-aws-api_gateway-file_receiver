@@ -30,6 +30,7 @@ The following input variables are required:
     }
     ```
 
+An optional api_description may also be given.
 
 
 ## API Usage
