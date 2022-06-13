@@ -1,4 +1,4 @@
-# Documentation
+# api_gateway-file_receiver
 
 This module generates a rest-api for sending files to S3. 
 
