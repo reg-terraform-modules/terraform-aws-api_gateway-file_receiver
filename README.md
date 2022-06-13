@@ -15,20 +15,20 @@ The following input variables are required:
     - an IAM role giving API Gateway permission to store files in S3.
     - must contain the following policy statements (these resources correspond to the usage example further down)
 
-    ```json
-    {
-      sid = "AllowGetPutInS3Key"
-      actions = ["s3:GetObject",
-                  "s3:PutObject"]
-      resources = ["arn:aws:s3:::{bucket}/{folder}/*"]
-    },
-    {
-      sid = "AllowAPIGatewayInvoke"
-      actions = ["execute-api:Invoke",
-                  "execute-api:ManageConnections"]
-      resources = ["arn:aws:execute-api:*:*:*"]
-    }
-    ```
+```json
+{
+  sid = "AllowGetPutInS3Key"
+  actions = ["s3:GetObject",
+              "s3:PutObject"]
+  resources = ["arn:aws:s3:::{bucket}/{folder}/*"]
+},
+{
+  sid = "AllowAPIGatewayInvoke"
+  actions = ["execute-api:Invoke",
+              "execute-api:ManageConnections"]
+  resources = ["arn:aws:execute-api:*:*:*"]
+}
+```
 
 An optional api_description may also be given.
 
