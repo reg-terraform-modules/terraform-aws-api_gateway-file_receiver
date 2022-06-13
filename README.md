@@ -1,9 +1,8 @@
-# Resource/function: api gateway/rest api
+# Documentation
 
-## Purpose
-API pipeline setup for generating apis for reciving files and storing in S3.
+This module generates a rest-api for sending files to S3. 
 
-## Description
+## Module description
 Generates a default API for reciving files using PUT method, and storing to chosen folder in S3. The API generates an API_KEY required for autorization, and activates logging to CloudWatch for each invokation.
 
 ## Requires
@@ -15,17 +14,18 @@ The following input variables are required:
 - iam_api_role_arn
     - an IAM role giving API Gateway permission to store files in S3.
     - must contain the following policy statements (these resources correspond to the usage example further down)
+
     ```json
     {
       sid = "AllowGetPutInS3Key"
       actions = ["s3:GetObject",
-                 "s3:PutObject"]
-      resources = ["arn:aws:s3:::test-reg-website-setup-dev/dbt/transformations/*"]
+                  "s3:PutObject"]
+      resources = ["arn:aws:s3:::{bucket}/{folder}/*"]
     },
     {
       sid = "AllowAPIGatewayInvoke"
       actions = ["execute-api:Invoke",
-                 "execute-api:ManageConnections"]
+                  "execute-api:ManageConnections"]
       resources = ["arn:aws:execute-api:*:*:*"]
     }
     ```
@@ -33,11 +33,11 @@ The following input variables are required:
 An optional api_description may also be given.
 
 
-## API Usage
+## Usage
 
 The API is invoked using:
 - {invoke_url}/{stage}/{bucket}/{folder}/{item}, where:
-    - invoke_url : is a url looking like this `https://e8xhab03x0.execute-api.eu-west-1.amazonaws.com/`
+    - invoke_url : is a url looking like this `https://{api_id}.execute-api.eu-west-1.amazonaws.com/`
     - stage : is the same as the api name in this implementation
     - bucket : name of the bucket to store file in
     - folder : folder structure to store file in
@@ -50,14 +50,14 @@ The API is invoked using:
 
 - The file to send is passed in the body. 
 
-Below is an example of how uploading a file to S3 using python code:
+Below is an example of how to upload a file to S3 using python code:
 
 ```py
 import requests
 
-url = "https://e8xhab03x0.execute-api.eu-west-1.amazonaws.com/TEST_API_FILES_Module/test-reg-website-setup-dev/dbt%2Ftransformations/index.html"
+url = "https://{api_id}.execute-api.eu-west-1.amazonaws.com/{stage}/{bucket}/{folder}/{item}"
 
-payload=open("index2.html", 'rb')
+payload=open("index.html", 'rb')
 headers = {
   'x-api-key': 'key_value',
   'Content-Type': 'text/html'
