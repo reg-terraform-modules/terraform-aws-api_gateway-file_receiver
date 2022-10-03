@@ -1,6 +1,6 @@
-
 resource "aws_api_gateway_rest_api" "this" {
-	name = join("", [var.project_name, "-", var.api_name, "-", var.env])
+  api_name = name = join("-", [var.project_name, var.module_name, var.env])
+	name = join("-", [var.project_name, var.module_name, var.env])
 	body = data.template_file.api_setup.rendered
   tags = var.resource_tags
 }
@@ -8,7 +8,7 @@ resource "aws_api_gateway_rest_api" "this" {
 data "template_file" "api_setup" {
   template = file("${path.module}/api_specification/api.yaml")
   vars = {
-    api_specification_name          = var.api_name
+    api_specification_name          = var.module_name
     iam_api_role_arn                = var.iam_api_role_arn
     api_description                 = var.api_description
   }
@@ -29,12 +29,12 @@ resource "aws_api_gateway_deployment" "this" {
 resource "aws_api_gateway_stage" "this" {
   deployment_id = aws_api_gateway_deployment.this.id
   rest_api_id   = aws_api_gateway_rest_api.this.id
-  stage_name    = var.api_name
+  stage_name    = var.module_name
   tags = var.resource_tags
 }
 
 resource "aws_api_gateway_usage_plan" "this" {
-  name = join("", [var.api_name, "-usage_plan-", var.env])
+  name = join("", [local.api_name, "-usage_plan-", var.env])
 
   api_stages {
     api_id = "${aws_api_gateway_rest_api.this.id}"
@@ -43,7 +43,7 @@ resource "aws_api_gateway_usage_plan" "this" {
 }
 
 resource "aws_api_gateway_api_key" "apikey" {
-  name = join("", [var.api_name, "-api_key-", var.env])
+  name = join("", [local.api_name, "-api_key-", var.env])
 }
 
 resource "aws_api_gateway_usage_plan_key" "main" {
