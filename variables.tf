@@ -25,5 +25,6 @@ variable "resource_tags" {
 }
 
 variable "api_name" {
+  description = "Api name"
   type    = string
 }
