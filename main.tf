@@ -1,5 +1,5 @@
 locals { 
-    service_name  = join("_", ["api_for",var.module_name])
+    service_name  = join("_", ["api_file_for",var.module_name])
     api_full_name = join("-", [var.project_name,local.service_name,var.env])
     stage_name    = join("_", [var.api_name, "api"])
     usage_plan    = join("-", [var.api_name,"usage_plan",var.env])
@@ -12,20 +12,12 @@ resource "aws_api_gateway_rest_api" "this" {
   tags = var.resource_tags
 }
 
-resource "aws_lambda_permission" "this" {
-  action        = "lambda:InvokeFunction"
-  function_name = var.lambda_api_function_arn
-  principal     = "apigateway.amazonaws.com"
-
-  source_arn = "${aws_api_gateway_rest_api.this.execution_arn}/*/*/*"
-}
-
 data "template_file" "api_setup" {
   template = file("${path.module}/api_specification/api.yaml")
   vars = {
-    api_specification_name          = local.api_full_name
-    lambda_api_function_arn         = var.lambda_api_function_arn
-    api_description = var.api_description
+    api_specification_name = local.api_full_name
+    iam_api_role_arn       = var.iam_api_role_arn
+    api_description        = var.api_description
   }
 }
 

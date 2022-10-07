@@ -23,3 +23,7 @@ variable "iam_api_role_arn" {
 variable "resource_tags" {
   type    = map(string)
 }
+
+variable "api_name" {
+  type    = string
+}
