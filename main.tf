@@ -1,5 +1,5 @@
 locals { 
-    service_name  = join("_", ["api_file_for",var.module_name])
+    service_name  = join("_", ["api_for",var.module_name])
     api_full_name = join("-", [var.project_name,local.service_name,var.env])
     stage_name    = join("_", [var.api_name, "api"])
     usage_plan    = join("-", [var.api_name,"usage_plan",var.env])
